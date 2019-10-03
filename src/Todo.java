@@ -19,11 +19,19 @@ public class Todo {
             System.out.println("Unable to read file: TODO-list.txt");
         }
 
+        if ( args.length == 0){
+            System.out.println("Command Line Todo application");
+            System.out.println("=============================");
+            System.out.println();
+            System.out.println("Command line arguments: \n" +
+                    "\t  -l   Lists all the tasks \n" +
+                    "\t  -a   Adds a new task \n" +
+                    "\t  -r   Removes an task \n" +
+                    "\t  -c   Completes an task \n");
 
-        String command = args[0];
-        if (command.equals("l")) {
+        } else if (args[0].equals("l")) {
             todo.listTasks(tasks);
-        } else if (command.equals("a")) {
+        } else if (args[0].equals("a")) {
             try {
                 String taskToAdd = args[1];
                 Files.write(filepath, todo.addNew(tasks, taskToAdd));
@@ -32,18 +40,26 @@ public class Todo {
             } catch (IOException e){
 
             }
-        } else if (command.equals("r")) {
+        } else if (args[0].equals("r")) {
             try {
                 String indexOfTaskToRemove = args[1];
                 int index = Integer.parseInt(indexOfTaskToRemove);
                 Files.write(filepath, todo.remove(tasks, index));
 
-            } catch (IOException e){
+            } catch (IOException e) {
 
-            } /*catch (ArrayIndexOutOfBoundsException e){
+            } catch (NumberFormatException n) {
+                System.out.println("Unable to remove: index is not a number");
+
+            } catch (Exception e){
+                if (args.length == 1){
                 System.out.println("Unable to remove: no index provided");
-            }*/
-        } else if (command.equals("c")) {
+                } else if (Integer.parseInt(args[1]) > tasks.size()) {
+                    System.out.println("Unable to remove: index is out of bound");
+                }
+
+            }
+        } else if (args[0].equals("c")) {
             try {
                 String taskToComplete = args[1];
                 int index = Integer.parseInt(taskToComplete);
@@ -52,6 +68,8 @@ public class Todo {
 
             }
         } else {
+
+            System.out.println("Unsupported argument");
 
             System.out.println("Command Line Todo application");
             System.out.println("=============================");
